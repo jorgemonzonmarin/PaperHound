@@ -1,5 +1,5 @@
 import reflex as rx
 
 config = rx.Config(
-    app_name="web_user_interface",
+    app_name="template_web",
 )

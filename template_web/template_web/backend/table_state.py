@@ -1,0 +1,207 @@
+import csv
+from pathlib import Path
+
+import reflex as rx
+from typing import List, Dict
+
+
+class Item(rx.Base):
+    """The item class."""
+
+    pipeline: str
+    status: str
+    workflow: str
+    timestamp: str
+    duration: str
+
+
+class TableState(rx.State):
+    """The state class."""
+
+    items: List[Item] = []
+
+    search_value: str = ""
+    sort_value: str = ""
+    sort_reverse: bool = False
+
+    total_items: int = 0
+    offset: int = 0
+    limit: int = 12  # Number of rows per page
+
+    @rx.var(cache=True)
+    def filtered_sorted_items(self) -> List[Item]:
+        items = self.items
+
+        # Filter items based on selected item
+        if self.sort_value:
+            items = sorted(
+                items,
+                key=lambda item: str(getattr(item, self.sort_value)).lower(),
+                reverse=self.sort_reverse,
+            )
+
+        # Filter items based on search value
+        if self.search_value:
+            search_value = self.search_value.lower()
+            items = [
+                item
+                for item in items
+                if any(
+                    search_value in str(getattr(item, attr)).lower()
+                    for attr in [
+                        "pipeline",
+                        "status",
+                        "workflow",
+                        "timestamp",
+                        "duration",
+                    ]
+                )
+            ]
+
+        return items
+
+    @rx.var(cache=True)
+    def page_number(self) -> int:
+        return (self.offset // self.limit) + 1
+
+    @rx.var(cache=True)
+    def total_pages(self) -> int:
+        return (self.total_items // self.limit) + (
+            1 if self.total_items % self.limit else 0
+        )
+
+    @rx.var(cache=True, initial_value=[])
+    def get_current_page(self) -> list[Item]:
+        start_index = self.offset
+        end_index = start_index + self.limit
+        return self.filtered_sorted_items[start_index:end_index]
+
+    def prev_page(self):
+        if self.page_number > 1:
+            self.offset -= self.limit
+
+    def next_page(self):
+        if self.page_number < self.total_pages:
+            self.offset += self.limit
+
+    def first_page(self):
+        self.offset = 0
+
+    def last_page(self):
+        self.offset = (self.total_pages - 1) * self.limit
+
+    def load_entries(self):
+        with Path("data.csv").open(encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            self.items = [Item(**row) for row in reader]
+            self.total_items = len(self.items)
+
+    def toggle_sort(self):
+        self.sort_reverse = not self.sort_reverse
+        self.load_entries()
+
+
+class DynamicTableState(rx.State):
+    """State for managing a generic table with unknown columns."""
+
+    items: List[Dict[str, str]] = []  # List of dictionaries where keys are column names
+    columns: List[str] = []  # Dynamically detected column names
+
+    search_value: str = ""
+    sort_value: str = ""
+    sort_reverse: bool = False
+
+    total_items: int = 0
+    offset: int = 0
+    limit: int = 12  # Number of rows per page
+
+    @rx.var(cache=True)
+    def filtered_sorted_items(self) -> List[Dict[str, str]]:
+        """Filters and sorts items based on user input."""
+        items = self.items
+
+        # Sort items based on selected column
+        if self.sort_value and self.sort_value in self.columns:
+            items = sorted(
+                items,
+                key=lambda item: str(item.get(self.sort_value, "")).lower(),
+                reverse=self.sort_reverse,
+            )
+
+        # Filter items based on search value
+        if self.search_value:
+            search_value = self.search_value.lower()
+            items = [
+                item
+                for item in items
+                if any(
+                    search_value in str(item.get(col, "")).lower()
+                    for col in self.columns
+                )
+            ]
+
+        return items
+
+    @rx.var(cache=True)
+    def page_number(self) -> int:
+        return (self.offset // self.limit) + 1
+
+    @rx.var(cache=True)
+    def total_pages(self) -> int:
+        return (self.total_items // self.limit) + (
+            1 if self.total_items % self.limit else 0
+        )
+
+    @rx.var(cache=True, initial_value=[])
+    def get_current_page(self) -> List[Dict[str, str]]:
+        """Returns the current page of items."""
+        start_index = self.offset
+        end_index = start_index + self.limit
+        return self.filtered_sorted_items[start_index:end_index]
+
+    def prev_page(self):
+        """Go to the previous page."""
+        if self.page_number > 1:
+            self.offset -= self.limit
+
+    def next_page(self):
+        """Go to the next page."""
+        if self.page_number < self.total_pages:
+            self.offset += self.limit
+
+    def first_page(self):
+        """Go to the first page."""
+        self.offset = 0
+
+    def last_page(self):
+        """Go to the last page."""
+        self.offset = (self.total_pages - 1) * self.limit
+
+    def load_entries(self):
+        """Loads data dynamically from a CSV file, detecting columns automatically."""
+        try:
+            with Path("assets/data.csv").open(encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                # Filter columns to only include 'Titulo' and those containing 'summary'
+                
+                filtered_fieldnames = [field for field in reader.fieldnames if 'Titulo' in field or 'summary' in field]
+            
+                # Filtrar las filas para que solo contengan los valores de las columnas seleccionadas
+                filtered_rows = [{key: row[key] for key in filtered_fieldnames} for row in reader]
+                
+                reader.fieldnames = filtered_fieldnames
+           
+                self.items = [row for row in filtered_rows]
+                self.columns = reader.fieldnames if reader.fieldnames else []
+                self.total_items = len(self.items)
+        except Exception as e:
+            print(f"Error loading CSV: {e}")
+            self.items = []
+            self.columns = []
+            self.total_items = 0
+
+    def toggle_sort(self, column: str):
+        """Toggles sorting for a given column."""
+        if column in self.columns:
+            self.sort_value = column
+            self.sort_reverse = not self.sort_reverse
