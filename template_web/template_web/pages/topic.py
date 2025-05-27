@@ -14,6 +14,12 @@ def settings() -> rx.Component:
 
     return rx.vstack(
         rx.heading("Topic page", size="5"),
+        
+        rx.text(
+            "A la hora de analizar y filtrar los papers encontrados, es necesario describir la temática en la que se centra la revisión bibliográfica. Esto se lleva a cabo mediante el topic. Introduce el topic en ingles a continuación.",
+            size="4",
+            margin_bottom="20px",
+        ),
 
         # Contenedor horizontal para el campo de entrada y el botón
         rx.hstack(
@@ -24,7 +30,7 @@ def settings() -> rx.Component:
                 width="80%",  
             ),
             rx.button(
-                "Add Query",
+                "Añadir topic",
                 on_click=TopicState.add_question,  
                 bg="blue",
                 color="white",
@@ -39,7 +45,7 @@ def settings() -> rx.Component:
 
         # Lista de preguntas agregadas con log
         rx.vstack(
-            rx.foreach(TopicState.questions, lambda q, idx: rx.hstack(
+            rx.foreach(TopicState.topic, lambda q, idx: rx.hstack(
                 rx.text(q, size="4", width="90%"),  
                 rx.button(
                     "X",
@@ -58,7 +64,7 @@ def settings() -> rx.Component:
 
         # Visualización del resultado final de preguntas (diseño diferenciado)
         rx.box(
-            rx.text(TopicState.questions_text, size="4", color="gray"),  # ✅ Texto más tenue
+            rx.text(TopicState.topic_text, size="4", color="gray"),  # ✅ Texto más tenue
             width="100%",  
             height="150px",  
             bg="#f5f5f5",  # ✅ Fondo gris claro

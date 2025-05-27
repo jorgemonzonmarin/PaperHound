@@ -14,17 +14,23 @@ def settings() -> rx.Component:
 
     return rx.vstack(
         rx.heading("Queries page", size="5"),
+        
+        rx.text(
+            "Esta página te permite agregar y gestionar las queries que se van a emplear para la búsqueda de articulos.",
+            size="4",
+            margin_bottom="20px",
+        ),
 
         # Contenedor horizontal para el campo de entrada y el botón
         rx.hstack(
             rx.input(
-                placeholder="Enter your queries here...",
+                placeholder="Introduce aquí tu query...",
                 value=QueryState.input_value,  
                 on_change=QueryState.set_input_value,  
                 width="80%",  
             ),
             rx.button(
-                "Add Query",
+                "Añadir pregunta",
                 on_click=QueryState.add_question,  
                 bg="blue",
                 color="white",
@@ -39,7 +45,7 @@ def settings() -> rx.Component:
 
         # Lista de preguntas agregadas con log
         rx.vstack(
-            rx.foreach(QueryState.questions, lambda q, idx: rx.hstack(
+            rx.foreach(QueryState.queries, lambda q, idx: rx.hstack(
                 rx.text(q, size="4", width="90%"),  
                 rx.button(
                     "X",
@@ -58,7 +64,7 @@ def settings() -> rx.Component:
 
         # Visualización del resultado final de preguntas (diseño diferenciado)
         rx.box(
-            rx.text(QueryState.questions_text, size="4", color="gray"),  # ✅ Texto más tenue
+            rx.text(QueryState.queries_text, size="4", color="gray"),  # ✅ Texto más tenue
             width="100%",  
             height="150px",  
             bg="#f5f5f5",  # ✅ Fondo gris claro

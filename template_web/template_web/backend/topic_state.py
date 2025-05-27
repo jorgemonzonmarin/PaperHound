@@ -1,7 +1,7 @@
 import reflex as rx
 
 class TopicState(rx.State):
-    questions: list[str] = []  # Lista de preguntas introducidas
+    topic: list[str] = []  # Lista de preguntas introducidas
     input_value: str = ""  # Estado para almacenar el valor del input
 
     def set_input_value(self, value: str):
@@ -14,8 +14,8 @@ class TopicState(rx.State):
         """Agrega una nueva pregunta a la lista y actualiza el estado."""
         print(f"[LOG] Intentando agregar pregunta: {self.input_value}")
         if self.input_value and self.input_value.strip():
-            self.questions.append(self.input_value.strip())
-            print(f"[LOG] Pregunta agregada. Lista actual: {self.questions}")
+            self.topic.append(self.input_value.strip())
+            print(f"[LOG] Pregunta agregada. Lista actual: {self.topic}")
             self.input_value = ""  # ✅ Limpia el input después de agregar
             self.set()  # ✅ ¡Forzar actualización del estado!
         else:
@@ -24,15 +24,15 @@ class TopicState(rx.State):
     def remove_question(self, index: int):
         """Elimina una pregunta de la lista por su índice y actualiza el estado."""
         print(f"[LOG] Intentando eliminar pregunta en índice: {index}")
-        if 0 <= index < len(self.questions):
-            self.questions.pop(index)
-            print(f"[LOG] Pregunta eliminada. Lista actual: {self.questions}")
+        if 0 <= index < len(self.topic):
+            self.topic.pop(index)
+            print(f"[LOG] Pregunta eliminada. Lista actual: {self.topic}")
             self.set()  # ✅ ¡Forzar actualización del estado!
         else:
             print("[LOG] Índice inválido o fuera de rango.")
 
     @rx.var
-    def questions_text(self) -> str:
+    def topic_text(self) -> str:
         """Devuelve todas las preguntas en formato de texto."""
-        print(f"[LOG] Generando texto para el área de preguntas: {self.questions}")
-        return "\n".join(self.questions)
+        print(f"[LOG] Generando texto para el área de preguntas: {self.topic}")
+        return "\n".join(self.topic)

@@ -15,7 +15,7 @@ def summary_page() -> rx.Component:
         # 📌 Topic de la revisión
         rx.text("Topic de la revisión:", size="4", font_weight="bold", margin_top="20px"),
         rx.box(
-            rx.text(TopicState.questions_text, size="4", color="gray"),  
+            rx.text(TopicState.topic_text, size="4", color="gray"),  
             width="100%",
             height="100px",
             bg="#f5f5f5",
@@ -28,7 +28,7 @@ def summary_page() -> rx.Component:
         # 📌 Queries de búsqueda
         rx.text("Queries de búsqueda:", size="4", font_weight="bold", margin_top="20px"),
         rx.box(
-            rx.text(QueryState.questions_text, size="4", color="gray"),
+            rx.text(QueryState.queries_text, size="4", color="gray"),
             width="100%",
             height="100px",
             bg="#f5f5f5",

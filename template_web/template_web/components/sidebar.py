@@ -134,11 +134,11 @@ def sidebar() -> rx.Component:
     # Lista de rutas en orden deseado
     ordered_page_routes = [
         "/",
-        "/about",
+        #"/about",
         "/topic",
         "/csv-view",
         "/queries",
-        "/askabout",
+        "/questions",
         "/summary",
     ]
 

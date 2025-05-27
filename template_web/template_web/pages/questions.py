@@ -2,12 +2,18 @@ import reflex as rx
 from ..templates import template
 from ..backend.questions_state import QuestionState  # Importar la clase de estado
 
-@template(route="/askabout", title="Ask about")
+@template(route="/questions", title="Questionsc")
 def settings() -> rx.Component:
     """Página para agregar y gestionar preguntas."""
 
     return rx.vstack(
         rx.heading("Questions page", size="5"),
+        
+        rx.text(
+            "Las preguntas introducidas aquí servirán para filtrar los papers encontrados. Realiza preguntas cuya respuesta sea si/no en inglés. DeepSeek se encargará de responderlas y almacenar los resultados.",
+            size="4",
+            margin_bottom="20px",
+        ),
 
         # Contenedor horizontal para el campo de entrada y el botón
         rx.hstack(

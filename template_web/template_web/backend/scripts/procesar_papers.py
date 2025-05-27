@@ -176,6 +176,8 @@ def process_text(title, abstract, doi, text, revista, questions_count=NUM_PREGUN
 def procesar_articulos(csv_path, output_path):
     """Carga los artículos, analiza su relevancia y guarda los resultados en un nuevo CSV."""
     logging.info(f"Cargando datos de {csv_path}")
+    logging.info(f"Topic a emplear : {TOPIC}")
+    logging.info(f"Preguntas a emplear : {QUESTIONS}")
     df = cargar_datos(csv_path)
     df_respuestas = create_dataframe(questions_count=NUM_PREGUNTAS)
     logging.debug("Cargando modelo de lenguaje...")
