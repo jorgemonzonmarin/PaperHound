@@ -12,7 +12,6 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
-
 PAPERS_A_ANALIZAR = r"C:\Users\JorgeMonzonMarin\GDI PROYECTOS Y MONTAJES, S.A\TESIS-Jorge - Documentos\Memoria\Papers\Sensor_espuma\lista_papers\2025-03-03_Papers_encontrados.csv"
 NUM_PREGUNTAS = 13
 
@@ -200,6 +199,8 @@ def procesar_articulos(csv_path, output_path):
     df_respuestas.to_csv(output_path, index=False)
     logging.info(f"Proceso completado. Resultados guardados en {output_path}")
 
+    return True
+
 def sort_by_yes_count(df):
     # Seleccionar columnas que terminan en 'summary'
     summary_cols = [col for col in df.columns if col.strip().endswith('summary')]
@@ -248,6 +249,8 @@ def verificar_y_reprocesar(output_path, threshold=0.2):
                 
     df.to_csv(output_path, index=False)
     logging.info(f"Reprocesamiento completado. Resultados guardados en {output_path}")
+
+    return True
 
 if __name__ == "__main__":
     # Uso del script
