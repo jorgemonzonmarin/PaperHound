@@ -12,6 +12,8 @@ from .scripts.search_and_save_papers import search_and_save_papers
 
 # from .rx_procesar_papers import RunInThreadState
 from .run_in_thread import run_in_thread
+import threading
+import asyncio
 
 class ProcessingState(rx.State):
     """Estado para gestionar la ejecución del procesamiento de artículos."""
@@ -57,8 +59,38 @@ class ProcessingState(rx.State):
                 output_path = f"articulos_filtrados_{fecha_actual}.csv"
 
             # Ejecutar funciones de procesamiento
-            procesamiento_completado = await run_in_thread(pp.procesar_articulos(csv_path=pp.PAPERS_A_ANALIZAR, output_path=output_path))
-            verificacion_completada = await run_in_thread(pp.verificar_y_reprocesar(output_path))
+            procesamiento_ready = threading.Event()
+            def procesar_articulos_thread():
+                try:
+                    procesamiento_completado = pp.procesar_articulos(csv_path=pp.PAPERS_A_ANALIZAR, output_path=output_path)                
+                except Exception as e:
+                    logging.error(f"Error en el procesamiento de artículos: {e}")
+                else:
+                    procesamiento_ready.set() 
+            
+            threading.Thread(target=procesar_articulos_thread, daemon=True).start()
+
+            while not procesamiento_ready.is_set():
+                logging.debug("El procesamiento todavía no ha terminado...")
+                await asyncio.sleep(10.0)  
+
+            verificacion_ready = threading.Event()
+            def verificar_articulos_thread():
+                try:
+                    verificacion_completada = pp.verificar_y_reprocesar(output_path)                
+                except Exception as e:
+                    logging.error(f"Error en la verificación de artículos: {e}")
+                else:
+                    verificacion_ready.set() 
+            
+            threading.Thread(target=verificar_articulos_thread, daemon=True).start()
+
+            while not verificacion_ready.is_set():
+                logging.debug("La verificación todavía no ha terminado...")
+                await asyncio.sleep(10.0)
+
+            # procesamiento_completado = await run_in_thread(pp.procesar_articulos(csv_path=pp.PAPERS_A_ANALIZAR, output_path=output_path))
+            # verificacion_completada = await run_in_thread(pp.verificar_y_reprocesar(output_path))
             
             #run_in_threaded_state = self.get_state(RunInThreadState)
             #
@@ -78,7 +110,7 @@ class ProcessingState(rx.State):
             #    logging.error(f"Error en el procesamiento: {last_task.status}")
 
             async with self:
-                self.status = "Procesando"
+                self.status = "Procsessing completed ✅"
             
         
         except Exception as e:
