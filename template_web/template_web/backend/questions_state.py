@@ -14,7 +14,11 @@ class QuestionState(rx.State):
         """Agrega una nueva pregunta a la lista y actualiza el estado."""
         print(f"[LOG] Intentando agregar pregunta: {self.input_value}")
         if self.input_value and self.input_value.strip():
-            self.questions.append(self.input_value.strip())
+            self.questions.extend(self.input_value.strip().split(";"))
+            self.questions = self.questions = sorted(
+                [q for q in self.questions if q.strip().split('.')[0].isdigit()],
+                key=lambda x: int(x.strip().split('.')[0])
+            )
             print(f"[LOG] Pregunta agregada. Lista actual: {self.questions}")
             self.input_value = ""  # ✅ Limpia el input después de agregar
             self.set()  # ✅ ¡Forzar actualización del estado!
@@ -35,4 +39,4 @@ class QuestionState(rx.State):
     def questions_text(self) -> str:
         """Devuelve todas las preguntas en formato de texto."""
         print(f"[LOG] Generando texto para el área de preguntas: {self.questions}")
-        return "\n".join(self.questions)
+        return ";".join(self.questions,)

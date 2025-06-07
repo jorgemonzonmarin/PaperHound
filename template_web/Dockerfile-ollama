@@ -1,0 +1,33 @@
+FROM python:3.12-slim
+
+# Instala dependencias del sistema
+RUN apt-get update && \
+    apt-get install -y curl git unzip libstdc++6 ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instala Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Agrega Ollama al PATH
+ENV PATH="/root/.ollama/bin:${PATH}"
+
+# Descarga el modelo (esto lo puedes omitir si prefieres descargarlo en tiempo de ejecución)
+RUN ollama pull deepseek-r1:8b
+
+# Instala dependencias de Python
+WORKDIR /app
+COPY requirements.txt .
+
+# Añade ollama como dependencia si no está en requirements.txt
+RUN pip install --no-cache-dir ollama && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copia tu código
+COPY . .
+
+# Expone puertos
+EXPOSE 3000
+EXPOSE 11434  
+
+# Script de inicio: lanza Ollama en segundo plano, espera que esté listo, luego ejecuta Reflex
+CMD ["bash", "-c", "ollama serve & while ! curl -s http://localhost:11434/ > /dev/null; do echo 'Esperando a que Ollama esté listo...'; sleep 1; done && echo 'Ollama iniciado. Ejecutando aplicación.' && reflex run"]

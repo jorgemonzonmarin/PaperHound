@@ -1,6 +1,6 @@
 import reflex as rx
 import logging
-
+import os 
 from datetime import datetime
 
 from ..backend.query_state import QueryState
@@ -14,6 +14,8 @@ from .scripts.search_and_save_papers import search_and_save_papers
 from .run_in_thread import run_in_thread
 import threading
 import asyncio
+
+papers_filepath = None  # Variable global para almacenar la ruta del archivo de artículos encontrados
 
 class ProcessingState(rx.State):
     """Estado para gestionar la ejecución del procesamiento de artículos."""
@@ -33,12 +35,13 @@ class ProcessingState(rx.State):
                 # 🔹 Obtener queries como lista de Python desde el backend
                 #queries_list = QueryState.questions_text_for_process
                 queries_state = await self.get_state(QueryState) 
-                queries_list = queries_state.queries  # ⚡ Ahora retorna una lista de Python
+                queries_list = queries_state.queries  
                 # 🔹 Registrar la lista para depuración
                 logging.info(f"Queries obtenidas: {queries_list}; tipo {type(queries_list)}")
 
                 # 🔹 Llamar a la función con la lista nativa
-                search_and_save_papers(queries=queries_list)
+                papers_filepath = search_and_save_papers(queries=queries_list) #FIXME: Incluir la función en un hilo para evitar bloqueos
+                
             except Exception as e:
                 logging.error(f"Error durante la búsqueda: {e}")
                 self.status = "Error ❌"
@@ -56,13 +59,17 @@ class ProcessingState(rx.State):
                 pp.QUESTIONS = '\n'.join(questions_list)
                 
                 fecha_actual = datetime.now().strftime("%Y-%m-%d")
-                output_path = f"articulos_filtrados_{fecha_actual}.csv"
-
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                path_file = os.path.join(current_dir, '..', '..', 'assets', 'papers_filtrados')
+                logging.info(current_dir)
+                
+                output_file = f"{fecha_actual}_articulos_filtrados.csv"
+                filtered_papers_filepath = os.path.join(path_file, output_file)
             # Ejecutar funciones de procesamiento
             procesamiento_ready = threading.Event()
             def procesar_articulos_thread():
                 try:
-                    procesamiento_completado = pp.procesar_articulos(csv_path=pp.PAPERS_A_ANALIZAR, output_path=output_path)                
+                    procesamiento_completado = pp.procesar_articulos(csv_path=papers_filepath, output_path=filtered_papers_filepath)                
                 except Exception as e:
                     logging.error(f"Error en el procesamiento de artículos: {e}")
                 else:
@@ -77,7 +84,7 @@ class ProcessingState(rx.State):
             verificacion_ready = threading.Event()
             def verificar_articulos_thread():
                 try:
-                    verificacion_completada = pp.verificar_y_reprocesar(output_path)                
+                    verificacion_completada = pp.verificar_y_reprocesar(filtered_papers_filepath)                
                 except Exception as e:
                     logging.error(f"Error en la verificación de artículos: {e}")
                 else:
@@ -89,30 +96,11 @@ class ProcessingState(rx.State):
                 logging.debug("La verificación todavía no ha terminado...")
                 await asyncio.sleep(10.0)
 
-            # procesamiento_completado = await run_in_thread(pp.procesar_articulos(csv_path=pp.PAPERS_A_ANALIZAR, output_path=output_path))
-            # verificacion_completada = await run_in_thread(pp.verificar_y_reprocesar(output_path))
-            
-            #run_in_threaded_state = self.get_state(RunInThreadState)
-            #
-            #await run_in_threaded_state.run_procesar_articulos()
-            #await run_in_threaded_state.run_verificar_y_reprocesar()
-
-            
             logging.info("Procesamiento finalizado")
-            
-            # Actualizar el estado a completado
-            #rx.cond(RunInThreadState.tasks) not None:
-            #last_task = RunInThreadState.tasks[-1]
-            #if last_task.status == "Complete":
-            #    logging.info("Procesamiento completado exitosamente.")
-            #    self.status = "Completed ✅"
-            #else:
-            #    logging.error(f"Error en el procesamiento: {last_task.status}")
 
             async with self:
-                self.status = "Procsessing completed ✅"
+                self.status = "Procesessing completed ✅"
             
-        
         except Exception as e:
             async with self:
                 logging.error(f"Error durante el procesamiento: {e}")

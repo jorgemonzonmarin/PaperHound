@@ -114,6 +114,8 @@ class DynamicTableState(rx.State):
     total_items: int = 0
     offset: int = 0
     limit: int = 12  # Number of rows per page
+    
+    selected_file: str = ""  # ⬅ Nuevo campo
 
     @rx.var(cache=True)
     def filtered_sorted_items(self) -> List[Dict[str, str]]:
@@ -178,27 +180,22 @@ class DynamicTableState(rx.State):
         self.offset = (self.total_pages - 1) * self.limit
 
     def load_entries(self):
-        """Loads data dynamically from a CSV file, detecting columns automatically."""
-        try:
-            with Path("assets/data.csv").open(encoding="utf-8") as file:
-                reader = csv.DictReader(file)
-                # Filter columns to only include 'Titulo' and those containing 'summary'
-                
-                filtered_fieldnames = [field for field in reader.fieldnames if 'Titulo' in field or 'summary' in field]
-            
-                # Filtrar las filas para que solo contengan los valores de las columnas seleccionadas
-                filtered_rows = [{key: row[key] for key in filtered_fieldnames} for row in reader]
-                
-                reader.fieldnames = filtered_fieldnames
-           
-                self.items = [row for row in filtered_rows]
-                self.columns = reader.fieldnames if reader.fieldnames else []
-                self.total_items = len(self.items)
-        except Exception as e:
-            print(f"Error loading CSV: {e}")
-            self.items = []
-            self.columns = []
-            self.total_items = 0
+            """Carga los datos usando el archivo seleccionado."""
+            try:
+                filepath = Path(f"assets/papers_filtrados/{self.selected_file}")
+                with filepath.open(encoding="utf-8") as file:
+                    reader = csv.DictReader(file)
+                    filtered_fieldnames = [f for f in reader.fieldnames if 'Titulo' in f or 'summary' in f]
+                    filtered_rows = [{k: row[k] for k in filtered_fieldnames} for row in reader]
+                    self.items = filtered_rows
+                    self.columns = filtered_fieldnames
+                    self.total_items = len(self.items)
+            except Exception as e:
+                print(f"Error loading file {self.selected_file}: {e}")
+                self.items = []
+                self.columns = []
+                self.total_items = 0
+
 
     def toggle_sort(self, column: str):
         """Toggles sorting for a given column."""

@@ -14,7 +14,7 @@ class QueryState(rx.State):
         """Agrega una nueva pregunta a la lista y actualiza el estado."""
         print(f"[LOG] Intentando agregar pregunta: {self.input_value}")
         if self.input_value and self.input_value.strip():
-            self.queries.append(self.input_value.strip())
+            self.queries.extend(self.input_value.strip().split(";"))
             print(f"[LOG] Pregunta agregada. Lista actual: {self.queries}")
             self.input_value = ""  # ✅ Limpia el input después de agregar
             self.set()  # ✅ ¡Forzar actualización del estado!
@@ -35,7 +35,7 @@ class QueryState(rx.State):
     def queries_text(self) -> str:
         """Devuelve todas las preguntas en formato de texto."""
         print(f"[LOG] Generando texto para el área de queries: {self.queries}. Tipo: {type(self.queries)}")
-        return "\n".join(self.queries)
+        return ";".join(self.queries)
 
     #@rx.var
     def queries_text_for_process(self) -> list[str]:  # ⚡ Ahora retorna una lista de Python

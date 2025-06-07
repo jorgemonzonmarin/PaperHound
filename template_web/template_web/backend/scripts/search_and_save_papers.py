@@ -118,7 +118,7 @@ def generate_filename(base_name):
     """
     Genera un nombre de archivo único para evitar sobrescribir.
     """
-    filename = f"{NOMBRE_CARPETA}/{base_name}.csv"
+    filename = f"{base_name}.csv"
     counter = 1
     while os.path.exists(filename):
         filename = f"{base_name}_{counter}.csv"
@@ -143,9 +143,12 @@ def save_to_csv(file_path, data):
         })
 
 def search_and_save_papers(queries=QUERIES):
-    
-    base_filename = datetime.now().strftime("%Y-%m-%d") + "_Papers_encontrados"
-    file_path = generate_filename(base_filename)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    path_file = os.path.join(current_dir, '..', '..', '..', 'assets', 'papers_encontrados')
+    logging.info(current_dir)
+    filename = datetime.now().strftime("%Y-%m-%d") + "_Papers_encontrados"
+    filename_correct = generate_filename(filename)
+    file_path = os.path.join(path_file, filename_correct)
     
     for query in queries:
         logging.info(f"🔎 Procesando query: {query}")
@@ -165,6 +168,7 @@ def search_and_save_papers(queries=QUERIES):
             
             save_to_csv(file_path, data)
             logging.info(f"✅ Guardado: {title} en {file_path}")
+    return file_path
 
 if __name__ == "__main__":
     search_and_save_papers()

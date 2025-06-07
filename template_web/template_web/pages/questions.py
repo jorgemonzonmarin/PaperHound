@@ -2,7 +2,7 @@ import reflex as rx
 from ..templates import template
 from ..backend.questions_state import QuestionState  # Importar la clase de estado
 
-@template(route="/questions", title="Questionsc")
+@template(route="/questions", title="Questions")
 def settings() -> rx.Component:
     """Página para agregar y gestionar preguntas."""
 
@@ -10,7 +10,11 @@ def settings() -> rx.Component:
         rx.heading("Questions page", size="5"),
         
         rx.text(
-            "Las preguntas introducidas aquí servirán para filtrar los papers encontrados. Realiza preguntas cuya respuesta sea si/no en inglés. DeepSeek se encargará de responderlas y almacenar los resultados.",
+            """
+            Las preguntas introducidas aquí servirán para filtrar los papers encontrados. Realiza preguntas cuya respuesta sea si/no en inglés. 
+            DeepSeek se encargará de responderlas y almacenar los resultados. Al igual que en la página de queries,
+            puedes introducir múltiples preguntas separándolas con punto y coma (;). Es importante que las preguntas aparezcan numeradas para identificarlas más adelante. Si la pregunta no esta numerada será ignorada. No te preocupes por el orden, las preguntas se ordenarán automáticamente.
+            """,
             size="4",
             margin_bottom="20px",
         ),

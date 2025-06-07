@@ -16,10 +16,40 @@ def settings() -> rx.Component:
         rx.heading("Queries page", size="5"),
         
         rx.text(
-            "Esta página te permite agregar y gestionar las queries que se van a emplear para la búsqueda de articulos.",
-            size="4",
-            margin_bottom="20px",
+            """
+            Esta página te permite agregar y gestionar las queries o consultas que se utilizarán para realizar búsquedas bibliográficas de forma sistemática. 
+            Estas queries están diseñadas para encontrar artículos relevantes mediante el uso de combinaciones de términos clave, sinónimos y operadores lógicos, 
+            siguiendo las buenas prácticas de búsqueda académica en bases de datos como Scopus, Web of Science o IEEE Xplore. Las queries se componen de los siguientes elementos:
+            """,
+            margin_bottom="1px",
         ),
+        rx.text("Operadores booleanos:", margin_bottom="1px"),
+        rx.list.unordered(
+            rx.list.item("AND: Requiere que todos los términos estén presentes. Restringe la búsqueda."),
+            rx.list.item("OR: Acepta que cualquiera de los términos esté presente. Amplía la búsqueda."),
+            rx.list.item("NOT: Excluye resultados que contengan un término específico. Se usa con precaución."),
+            rx.list.item('Comillas " ": Encapsulan expresiones compuestas por varias palabras, garantizando que se busquen como frase exacta y no por separado.'),
+            rx.list.item("Paréntesis (): Agrupan sinónimos o términos equivalentes para combinarse con otros bloques."),
+        ),
+        rx.text("Truncamientos y comodines:", margin_bottom="1px"),    
+        rx.list.unordered(
+            rx.list.item('*: Sustituye cualquier número de caracteres. Ej.: detect* recupera "detect", "detection", "detecting", etc.'),
+            rx.list.item('?: Sustituye un solo carácter. Ej.: analy?e encuentra tanto "analyze" como "analyse".'),
+        ),
+        rx.text("Ejemplo explicado paso a paso", margin_bottom="1px"),
+        rx.code(
+            """
+            ("foam detection" OR "bubble detection" OR "foam sensing") AND ("ultrasonic sensor" OR "ultrasound sensor")
+            """
+        ),
+        rx.text("¿Qué hace esta query?", margin_bottom="1px"),
+        rx.list.unordered(
+            rx.list.item('"foam detection" OR "bubble detection" OR "foam sensing": Encuentra artículos que mencionan cualquiera de estas formas de referirse a la detección de espuma.'),
+            rx.list.item('"ultrasonic sensor" OR "ultrasound sensor": Incluye dos formas comunes de referirse a sensores por ultrasonidos.'),
+            rx.list.item('AND: Solo se devolverán resultados que contengan al menos un término de cada bloque.'),
+        ),        
+        rx.text("De esta forma, se asegura que los artículos estén relacionados tanto con sensores ultrasónicos como con la detección de espuma, sin importar la variación terminológica empleada por los autores.", margin_bottom="1px"),
+        rx.text("Es posible introducir múltiples queries de forma simultanea separando cada una de ellas con un punto y coma (;) entre una y otra.", margin_bottom="1px"),
 
         # Contenedor horizontal para el campo de entrada y el botón
         rx.hstack(
@@ -30,7 +60,7 @@ def settings() -> rx.Component:
                 width="80%",  
             ),
             rx.button(
-                "Añadir pregunta",
+                "Añadir queries",
                 on_click=QueryState.add_question,  
                 bg="blue",
                 color="white",
@@ -59,7 +89,7 @@ def settings() -> rx.Component:
             width="100%",
             border="1px solid #ddd",  
             padding="10px",
-            border_radius="5px",  
+            border_radius="1px",  
         ),
 
         # Visualización del resultado final de preguntas (diseño diferenciado)
@@ -70,7 +100,7 @@ def settings() -> rx.Component:
             bg="#f5f5f5",  # ✅ Fondo gris claro
             padding="10px",
             margin_top="10px",
-            border_radius="5px",  
+            border_radius="1px",  
             cursor="not-allowed",  # ✅ Bloquea interacción con el mouse
             border="1px solid #ccc",  
         ),
