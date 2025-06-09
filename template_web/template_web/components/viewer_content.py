@@ -1,11 +1,11 @@
 import reflex as rx
 from ..components.custom_table import DynamicTableState, generate_dynamic_table
+from ..backend.sidebar_state import SidebarState
 
 def viewer_content():
     return rx.box(
-        rx.vstack(
-            rx.heading("📊 CSV Viewer", size="7"),
-            rx.button("Reload Data", on_click=DynamicTableState.load_entries),
+        rx.vstack(  
+            rx.button("Ocultar/mostrar barra lateral", on_click=SidebarState.toggle_sidebar),
             rx.box(
                 generate_dynamic_table(),
                 width="100%",

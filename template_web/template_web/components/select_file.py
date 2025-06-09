@@ -26,13 +26,14 @@ class SelectState3(rx.State):
 
 def select_example3():
     return rx.vstack(
+        rx.heading("📊 CSV Viewer", size="7"),
         rx.select(
             SelectState3.values,
             value=SelectState3.value,
             on_change=SelectState3.set_value,
         ),
         rx.button(
-            "Mostrar visor",
+            "Mostrar resultados",
             on_click=SelectState3.show_viewer,
         ),
         rx.cond(

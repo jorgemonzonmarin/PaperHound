@@ -186,3 +186,4 @@ def sidebar() -> rx.Component:
         flex="1",
         bg=rx.color("gray", 2),
     )
+
