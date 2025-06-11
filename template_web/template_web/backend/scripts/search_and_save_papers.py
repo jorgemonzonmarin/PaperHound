@@ -143,32 +143,36 @@ def save_to_csv(file_path, data):
         })
 
 def search_and_save_papers(queries=QUERIES):
+
     current_dir = os.path.dirname(os.path.abspath(__file__))
     path_file = os.path.join(current_dir, '..', '..', '..', 'assets', 'papers_encontrados')
     logging.info(current_dir)
     filename = datetime.now().strftime("%Y-%m-%d") + "_Papers_encontrados"
     filename_correct = generate_filename(filename)
     file_path = os.path.join(path_file, filename_correct)
-    
-    for query in queries:
-        logging.info(f"🔎 Procesando query: {query}")
-        papers = search_papers([query], max_results=5)
-        
-        for paper in papers:
-            title = paper["titulo"]
-            abstract = get_valid_abstract(title)
+    try: 
+        for query in queries:
+            logging.info(f"🔎 Procesando query: {query}")
+            papers = search_papers([query], max_results=5)
             
-            data = {
-                "Query": query,
-                "Titulo": title,
-                "DOI": paper["doi"],
-                "Revista": paper["revista"],
-                "Abstract": abstract.replace('\n', ' ')  # Remover saltos de línea en el abstract
-            }
-            
-            save_to_csv(file_path, data)
-            logging.info(f"✅ Guardado: {title} en {file_path}")
-    return file_path
+            for paper in papers:
+                title = paper["titulo"]
+                abstract = get_valid_abstract(title)
+                
+                data = {
+                    "Query": query,
+                    "Titulo": title,
+                    "DOI": paper["doi"],
+                    "Revista": paper["revista"],
+                    "Abstract": abstract.replace('\n', ' ')  # Remover saltos de línea en el abstract
+                }
+                
+                save_to_csv(file_path, data)
+                logging.info(f"✅ Guardado: {title} en {file_path}")
+    except Exception as e:
+        logging.error(f"Error durante la búsqueda y guardado de papers: {e}")
+    finally:
+        return file_path
 
 if __name__ == "__main__":
     search_and_save_papers()

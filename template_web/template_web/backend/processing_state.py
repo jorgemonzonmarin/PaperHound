@@ -15,13 +15,14 @@ from .run_in_thread import run_in_thread
 import threading
 import asyncio
 
-papers_filepath = None  # Variable global para almacenar la ruta del archivo de artículos encontrados
+   # Variable global para almacenar la ruta del archivo de artículos encontrados
 
 class ProcessingState(rx.State):
     """Estado para gestionar la ejecución del procesamiento de artículos."""
     
     status: str = "Ready"  # Estado inicial
-    
+    papers_filepath: str = ""  # ✅ Declaración correcta del atributo
+
     @rx.event(background=True) 
     async def start_processing(self):
         async with self:
@@ -31,7 +32,8 @@ class ProcessingState(rx.State):
             
             try: 
                 logging.info("Iniciando la búsqueda de artículos")
-
+                self.status = "Iniciando búsqueda de papers..."
+                self.set()
                 # 🔹 Obtener queries como lista de Python desde el backend
                 #queries_list = QueryState.questions_text_for_process
                 queries_state = await self.get_state(QueryState) 
@@ -40,8 +42,12 @@ class ProcessingState(rx.State):
                 logging.info(f"Queries obtenidas: {queries_list}; tipo {type(queries_list)}")
 
                 # 🔹 Llamar a la función con la lista nativa
-                papers_filepath = search_and_save_papers(queries=queries_list) #FIXME: Incluir la función en un hilo para evitar bloqueos
-                
+                ruta_papers = search_and_save_papers(queries=queries_list) #FIXME: Incluir la función en un hilo para evitar bloqueos
+                logging.info(f"Ruta de los papers encontrados: {ruta_papers}")
+                self.papers_filepath = ruta_papers  # Guardar la ruta del archivo de artículos encontrados
+                logging.info(f"Actualizando ruta papers: {self.papers_filepath}")
+                self.status = "Búsqueda de papers completada ✅"
+                self.set()
             except Exception as e:
                 logging.error(f"Error durante la búsqueda: {e}")
                 self.status = "Error ❌"
@@ -49,8 +55,9 @@ class ProcessingState(rx.State):
         try:
             async with self:
                 logging.info("Iniciando el procesamiento de artículos...")
-                
                 # Generar el nombre del archivo de salida
+                self.status = "Procesando papers..."
+                self.set()
                 topic_state = await self.get_state(TopicState) 
                 pp.TOPIC = topic_state.topic[0]
                 
@@ -69,7 +76,7 @@ class ProcessingState(rx.State):
             procesamiento_ready = threading.Event()
             def procesar_articulos_thread():
                 try:
-                    procesamiento_completado = pp.procesar_articulos(csv_path=papers_filepath, output_path=filtered_papers_filepath)                
+                    procesamiento_completado = pp.procesar_articulos(csv_path=self.papers_filepath, output_path=filtered_papers_filepath)                
                 except Exception as e:
                     logging.error(f"Error en el procesamiento de artículos: {e}")
                 else:
