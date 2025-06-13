@@ -4,10 +4,10 @@ import reflex as rx
 
 from ..backend.table_state import TableState
 from ..templates import template
-from ..views.table import main_table
+#from ..views.table import main_table
 
 
-@template(route="/", title="Inicio", on_load=TableState.load_entries)
+@template(route="/", title="Inicio")#, on_load=TableState.load_entries)
 def dashboard() -> rx.Component:
     """The dashboard page.
 
