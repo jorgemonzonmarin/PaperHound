@@ -14,9 +14,12 @@ def sidebar_header() -> rx.Component:
     """
     return rx.hstack(
         # The logo.
-        rx.color_mode_cond(
-            rx.image(src="/reflex_black.svg", height="1.5em"),
-            rx.image(src="/reflex_white.svg", height="1.5em"),
+        rx.heading(
+            "PaperHound",
+            size="2",
+            color=styles.accent_text_color,
+            font_weight="bold",
+            style={"text_transform": "uppercase"},
         ),
         rx.spacer(),
         align="center",
@@ -25,39 +28,8 @@ def sidebar_header() -> rx.Component:
         margin_bottom="1em",
     )
 
-
-def sidebar_footer() -> rx.Component:
-    """Sidebar footer.
-
-    Returns:
-        The sidebar footer component.
-
-    """
-    return rx.hstack(
-        rx.link(
-            rx.text("Docs", size="3"),
-            href="https://reflex.dev/docs/getting-started/introduction/",
-            color_scheme="gray",
-            underline="none",
-        ),
-        rx.link(
-            rx.text("Blog", size="3"),
-            href="https://reflex.dev/blog/",
-            color_scheme="gray",
-            underline="none",
-        ),
-        rx.spacer(),
-        rx.color_mode.button(style={"opacity": "0.8", "scale": "0.95"}),
-        justify="start",
-        align="center",
-        width="100%",
-        padding="0.35em",
-    )
-
-
 def sidebar_item_icon(icon: str) -> rx.Component:
     return rx.icon(icon, size=18)
-
 
 def sidebar_item(text: str, url: str) -> rx.Component:
     """Sidebar item.
@@ -81,8 +53,6 @@ def sidebar_item(text: str, url: str) -> rx.Component:
                 text,
                 ("Queries", sidebar_item_icon("scan-search")),
                 ("Ask about", sidebar_item_icon("message-circle-question")),
-                #("Dashboard", sidebar_item_icon("layout-dashboard")),
-                #("About", sidebar_item_icon("book-open")),
                 ("Topic", sidebar_item_icon("album")),
                 ("Search and process", sidebar_item_icon("circle-play")),
                 ("Csv", sidebar_item_icon("settings")),
@@ -125,7 +95,6 @@ def sidebar_item(text: str, url: str) -> rx.Component:
         width="100%",
     )
 
-
 def sidebar() -> rx.Component:
     """The sidebar with toggle functionality."""
 
@@ -134,7 +103,6 @@ def sidebar() -> rx.Component:
     # Lista de rutas en orden deseado
     ordered_page_routes = [
         "/",
-        #"/about",
         "/topic",
         "/csv-view",
         "/queries",
@@ -168,7 +136,7 @@ def sidebar() -> rx.Component:
                 width="100%",
             ),
             rx.spacer(),
-            sidebar_footer(),
+            #sidebar_footer(),
             justify="end",
             align="end",
             width="100%",
