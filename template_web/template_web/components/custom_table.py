@@ -57,7 +57,6 @@ def status_badge(status):
         _badge(f"{status}"),  # 🔹 Valor por defecto
     )
 
-
 def generate_dynamic_table() -> rx.Component:
     """Genera una tabla dinámica basada en los datos del CSV."""
 
