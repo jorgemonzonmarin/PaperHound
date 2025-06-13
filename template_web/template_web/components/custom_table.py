@@ -17,10 +17,8 @@ def styled_cell(value: str) -> rx.Component:
 
 def _badge(status: str):
     """Genera un badge estilizado basado en el estado."""
-    print(f"DEBUG: Valor recibido en status_badge: '{status}'")  # 🔹 Depuración
     # Normalizar el valor eliminando espacios y asegurando formato uniforme
     status = re.sub(r"\s+", " ", str(status)).strip().replace(" ", "")  # 🔹 Convierte "  Not  Determined " a "NotDetermined"
-    print(f"DEBUG: Valor recibido en status_badge: '{status}'")  # 🔹 Depuración
      
     status_styles = {
         "Yes": {"icon": "✔️", "text": "Yes", "color": "green", "bg": "#ECFDF5", "border": "#10B981"},
