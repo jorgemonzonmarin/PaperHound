@@ -34,7 +34,7 @@ class QueryState(rx.State):
     @rx.var
     def queries_text(self) -> str:
         """Devuelve todas las preguntas en formato de texto."""
-        print(f"[LOG] Generando texto para el área de queries: {self.queries}. Tipo: {type(self.queries)}")
+        print(f"[LOG] Generando texto para el área de queries: {self.queries}.")
         return ";".join(self.queries)
 
     #@rx.var
