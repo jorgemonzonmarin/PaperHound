@@ -30,7 +30,8 @@ def get_paper_info_openalex(title):
     
     return None
 
-# Ejemplo de uso
-title = "Deep learning for time-series forecasting"
-paper_info = get_paper_info_openalex(title)
-print(paper_info)
+if __name__ == "__main__":
+    
+    title = "Deep learning for time-series forecasting"
+    paper_info = get_paper_info_openalex(title)
+    print(paper_info)

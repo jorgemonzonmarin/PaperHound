@@ -16,6 +16,8 @@ def get_paper_info(title):
         }
     return None
 
-title = "Deep learning for time-series forecasting"
-paper_info = get_paper_info(title)
-print(paper_info)
+if __name__ == "__main__":
+    # Ejemplo de uso
+    title = "Deep learning for time-series forecasting"
+    paper_info = get_paper_info(title)
+    print(paper_info)
