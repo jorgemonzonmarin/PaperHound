@@ -16,13 +16,12 @@ def settings() -> rx.Component:
             puedes introducir múltiples preguntas separándolas con punto y coma (;). Es importante que las preguntas aparezcan numeradas para identificarlas más adelante. Si la pregunta no esta numerada será ignorada. No te preocupes por el orden, las preguntas se ordenarán automáticamente.
             """,
             size="4",
-            margin_bottom="20px",
         ),
 
         # Contenedor horizontal para el campo de entrada y el botón
         rx.hstack(
             rx.input(
-                placeholder="Enter your question here...",
+                placeholder="Introduce aquí tu pregunta numerada",
                 value=QuestionState.input_value,  
                 on_change=QuestionState.set_input_value,  
                 width="80%",  
@@ -37,10 +36,18 @@ def settings() -> rx.Component:
             width="100%",  
             align="end",  
         ),
+        
+        rx.text(
+            """
+            Además de introducir las preguntas manualmente, puedes cargarlas desde un fichero *.txt que contenga las preguntas numeradas en cada línea. Para hacerlo, elige el fichero que quieres cargar y pulsa el botón "Cargar preguntas".
+            """,
+            size="4",
+        ),
+        
         rx.hstack(
             rx.select(
                 QuestionState.file_options,
-                placeholder="Selecciona un archivo...",
+                placeholder="Selecciona un archivo de la carpeta filtro_preguntas",
                 on_change=QuestionState.set_selected_file,
                 width="70%",
             ),
