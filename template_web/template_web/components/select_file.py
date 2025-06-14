@@ -26,7 +26,7 @@ class SelectState3(rx.State):
 
 def select_example3():
     return rx.vstack(
-        rx.heading("📊 CSV Viewer", size="7"),
+        rx.heading("📊 Resumen de artículos filtrados", size="7"),
         rx.select(
             SelectState3.values,
             value=SelectState3.value,
