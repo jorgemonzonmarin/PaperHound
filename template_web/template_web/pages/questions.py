@@ -37,6 +37,24 @@ def settings() -> rx.Component:
             width="100%",  
             align="end",  
         ),
+        rx.hstack(
+            rx.select(
+                QuestionState.file_options,
+                placeholder="Selecciona un archivo...",
+                on_change=QuestionState.set_selected_file,
+                width="70%",
+            ),
+            rx.button(
+                "Cargar preguntas",
+                on_click=QuestionState.load_questions_from_selected_file,
+                bg="green",
+                color="white",
+                width="30%",
+            ),
+            width="100%",
+        ),
+
+        rx.button("Recargar lista de archivos", on_click=QuestionState.load_file_options),
 
         # Texto para separar visualmente
         rx.text("Preguntas introducidas hasta el momento:", size="4", margin_top="20px", font_weight="bold"),
