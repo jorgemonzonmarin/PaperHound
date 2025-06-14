@@ -15,19 +15,54 @@ class QuestionState(rx.State):
         self.set()  # ✅ Forzar actualización del estado
 
     def add_question(self):
-        """Agrega una nueva pregunta a la lista y actualiza el estado."""
-        print(f"[LOG] Intentando agregar pregunta: {self.input_value}")
-        if self.input_value and self.input_value.strip():
-            self.questions.extend(self.input_value.strip().split(";"))
-            self.questions = self.questions = sorted(
-                [q for q in self.questions if q.strip().split('.')[0].isdigit()],
-                key=lambda x: int(x.strip().split('.')[0])
-            )
-            print(f"[LOG] Pregunta agregada. Lista actual: {self.questions}")
-            self.input_value = ""  # ✅ Limpia el input después de agregar
-            self.set()  # ✅ ¡Forzar actualización del estado!
-        else:
+        """Agrega una nueva pregunta, asignando un número único si es necesario."""
+        print(f"[LOG] Intentando agregar pregunta(s): {self.input_value}")
+        
+        if not self.input_value or not self.input_value.strip():
             print("[LOG] La pregunta estaba vacía o no era válida.")
+            return
+
+        # Obtener los números ya usados
+        used_numbers = set()
+        for q in self.questions:
+            match = re.match(r"^(\d+)", q.strip())
+            if match:
+                used_numbers.add(int(match.group(1)))
+        next_number = 1 if not used_numbers else max(used_numbers) + 1
+
+        # Separar múltiples preguntas con punto y coma
+        raw_questions = [q.strip() for q in self.input_value.split(";") if q.strip()]
+        
+        for raw_q in raw_questions:
+            match = re.match(r"^(\d+)\s*[\.:]?\s*(.*)", raw_q)
+            if match:
+                number = int(match.group(1))
+                question_text = match.group(2).strip()
+                if number in used_numbers:
+                    # Si el número ya existe, asigna uno nuevo
+                    while next_number in used_numbers:
+                        next_number += 1
+                    final_q = f"{next_number} {question_text}"
+                    used_numbers.add(next_number)
+                    print(f"[LOG] Número repetido ({number}), nueva pregunta como: {final_q}")
+                else:
+                    final_q = f"{number} {question_text}"
+                    used_numbers.add(number)
+                    print(f"[LOG] Número único, pregunta agregada: {final_q}")
+            else:
+                # Si no empieza con número, asigna uno nuevo
+                while next_number in used_numbers:
+                    next_number += 1
+                final_q = f"{next_number} {raw_q}"
+                used_numbers.add(next_number)
+                print(f"[LOG] Pregunta sin número, se asigna: {final_q}")
+
+            self.questions.append(final_q)
+
+        self.input_value = ""
+        self.set()  # Forzar actualización
+        print(f"[LOG] Lista actual de preguntas: {self.questions}")
+
 
     def remove_question(self, index: int):
         """Elimina una pregunta de la lista por su índice y actualiza el estado."""
