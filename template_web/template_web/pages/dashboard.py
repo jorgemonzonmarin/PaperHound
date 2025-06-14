@@ -1,9 +1,6 @@
-"""The dashboard page."""
-
 import reflex as rx
 
 from ..templates import template
-
 
 @template(route="/", title="Inicio")
 def dashboard() -> rx.Component:
