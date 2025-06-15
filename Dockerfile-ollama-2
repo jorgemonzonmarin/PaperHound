@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir ollama && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copiar aplicación
-COPY . .
+COPY ./PaperHound .
 
 # Descargar modelo en el build usando servidor temporal
 RUN bash -c "\
