@@ -1,14 +1,11 @@
 """The about page of the app."""
 
-
-
 from pathlib import Path
 
 import reflex as rx
 
 from .. import styles
 from ..templates import template
-
 
 @template(route="/about", title="About")
 def about() -> rx.Component:

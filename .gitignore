@@ -7,6 +7,19 @@ __pycache__/
 data*
 articulos* 
 
+#reflex
+.states
+assets/external/
+*.db
+*.py[cod]
+.cursorignore
+.venv/
+.vscode/
+.web
+__pycache__/
+venv/
+
+
 # C extensions
 *.so
 
