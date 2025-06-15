@@ -7,7 +7,7 @@ import logging
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
 sys.path.insert(0, project_root)
 
-from template_web.backend.scripts.bbdd_papers.filter import filter_valid_results
+from PaperHound.backend.scripts.bbdd_papers.filter import filter_valid_results
 
 SCOPUS_API_KEY = "28ed61df3b550a39c575b5270b49f254"
 SCOPUS_SEARCH_URL = "https://api.elsevier.com/content/search/scopus"

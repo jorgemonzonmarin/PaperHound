@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
 sys.path.insert(0, project_root)
 
-from template_web.backend.scripts.bbdd_papers.filter import filter_valid_results
+from PaperHound.backend.scripts.bbdd_papers.filter import filter_valid_results
 
 ARXIV_SEARCH_URL = "http://export.arxiv.org/api/query"
 

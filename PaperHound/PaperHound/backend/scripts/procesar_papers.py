@@ -1,6 +1,6 @@
 import pandas as pd
 import ollama
-from transformers import pipeline
+#from transformers import pipeline
 import os
 import re
 from datetime import datetime
