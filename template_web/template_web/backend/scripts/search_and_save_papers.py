@@ -1,15 +1,18 @@
 import os
+import sys
 import csv
 import logging
 from datetime import datetime
-from .search_papers import search_papers
-from .get_abstract import (
-    get_paper_info_arxiv,
-    get_paper_info_semantic,
-    get_paper_info_scopus,
-    get_paper_info_openalex,
-    get_paper_info_crossref,
-)
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+sys.path.insert(0, project_root)
+
+from template_web.backend.scripts.search_papers import search_papers
+from template_web.backend.scripts.bbdd_papers.arxiv import get_paper_info_arxiv
+from template_web.backend.scripts.bbdd_papers.scopus_api import get_paper_info_scopus
+from template_web.backend.scripts.bbdd_papers.open_alex_api import get_paper_info_openalex
+from template_web.backend.scripts.bbdd_papers.cross_ref_api import get_paper_info_crossref
+from template_web.backend.scripts.bbdd_papers.semantic_schoolar_api import get_paper_info_semantic
 
 logging.basicConfig(
     level=logging.INFO,

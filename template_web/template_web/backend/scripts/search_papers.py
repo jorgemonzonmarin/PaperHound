@@ -1,13 +1,19 @@
+import os 
+import sys
+
 import time
 import logging
 import requests
 import xml.etree.ElementTree as ET
 
-from .candidatos_busqueda_abstract.xarvy import fetch_arxiv_articles
-from .candidatos_busqueda_abstract.scopus_api import fetch_scopus_articles
-from .candidatos_busqueda_abstract.cross_ref_api import fetch_crossref_articles
-from .candidatos_busqueda_abstract.open_alex_api import fetch_openalex_articles
-from .candidatos_busqueda_abstract.google_schoolar import fetch_scholar_articles
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+sys.path.insert(0, project_root)
+
+from template_web.backend.scripts.bbdd_papers.arxiv import fetch_arxiv_articles
+from template_web.backend.scripts.bbdd_papers.scopus_api import fetch_scopus_articles
+from template_web.backend.scripts.bbdd_papers.open_alex_api import fetch_openalex_articles
+from template_web.backend.scripts.bbdd_papers.cross_ref_api import fetch_crossref_articles
+from template_web.backend.scripts.bbdd_papers.google_schoolar import fetch_scholar_articles
 
 CORE_SEARCH_URL = "https://api.core.ac.uk/v3/search/works"
 

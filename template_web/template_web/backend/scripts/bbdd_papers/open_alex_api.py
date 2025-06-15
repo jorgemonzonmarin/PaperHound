@@ -1,7 +1,13 @@
+import os
+import sys
+
 import logging
 import requests
 
-from .filter import filter_valid_results
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
+sys.path.insert(0, project_root)
+
+from template_web.backend.scripts.bbdd_papers.filter import filter_valid_results
 
 # OpenAlex: Ilimitado pero con límite de velocidad.
 
@@ -33,31 +39,18 @@ def fetch_openalex_articles(query, max_results=10):
 def get_paper_info_openalex(title):
     url = "https://api.openalex.org/works"
     params = {"filter": f"display_name.search:{title}", "per_page": 1}
-
+    
     response = requests.get(url, params=params)
     data = response.json()
-
+    
     if "results" in data and data["results"]:
         paper = data["results"][0]
-
-        # Procesar el abstract
         abstract_dict = paper.get("abstract_inverted_index", {})
         if abstract_dict:
-            # Ordenar las palabras por su posición en el texto
             abstract_words = sorted(
                 [(pos, word) for word, positions in abstract_dict.items() for pos in positions]
             )
-            abstract_text = " ".join(word for _, word in abstract_words)
-        else:
-            abstract_text = "No abstract available"
-
-        return {
-            "title": paper.get("display_name", "No title found"),
-            "abstract": abstract_text,
-            "doi": paper.get("doi", "No DOI found"),
-            "link": paper.get("id", "No link available")
-        }
-    
+            return " ".join(word for _, word in abstract_words)
     return None
 
 if __name__ == "__main__":

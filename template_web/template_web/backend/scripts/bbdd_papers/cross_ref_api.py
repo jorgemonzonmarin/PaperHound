@@ -1,6 +1,13 @@
+import os
+import sys
+
 import logging
 import requests
-from .filter import filter_valid_results
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
+sys.path.insert(0, project_root)
+
+from template_web.backend.scripts.bbdd_papers.filter import filter_valid_results
 
 # CrossRef: Límite de consultas por minuto.
 
@@ -29,20 +36,14 @@ def fetch_crossref_articles(query, max_results=10):
         logging.error(f"❌ Error en CrossRef: {e}")
     return filter_valid_results(results)
 
-def get_paper_info(title):
+def get_paper_info_crossref(title):
     url = "https://api.crossref.org/works"
-    params = {"query": title, "rows": 1}  # Busca el paper más relevante
+    params = {"query": title, "rows": 1}
     response = requests.get(url, params=params)
     data = response.json()
-    print(data)
     
     if "message" in data and "items" in data["message"] and data["message"]["items"]:
-        paper = data["message"]["items"][0]
-        return {
-            "title": paper.get("title", ["No title found"])[0],
-            "abstract": paper.get("abstract", "No abstract available"),
-            "doi": paper.get("DOI", "No DOI found")
-        }
+        return data["message"]["items"][0].get("abstract")
     return None
 
 if __name__ == "__main__":
@@ -50,5 +51,5 @@ if __name__ == "__main__":
     fetch_crossref_articles(query)
     # Ejemplo de uso
     title = "Deep learning for time-series forecasting"
-    paper_info = get_paper_info(title)
+    paper_info = get_paper_info_crossref(title)
     print(paper_info)

@@ -1,7 +1,13 @@
+import os
+import sys
+
 import requests
 import logging
 
-from .filter import filter_valid_results
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
+sys.path.insert(0, project_root)
+
+from template_web.backend.scripts.bbdd_papers.filter import filter_valid_results
 
 SCOPUS_API_KEY = "28ed61df3b550a39c575b5270b49f254"
 SCOPUS_SEARCH_URL = "https://api.elsevier.com/content/search/scopus"
@@ -34,18 +40,12 @@ def get_paper_info_scopus(title):
     url = "https://api.elsevier.com/content/search/scopus"
     headers = {"X-ELS-APIKey": SCOPUS_API_KEY, "Accept": "application/json"}
     params = {"query": f"TITLE({title})", "count": 1}
-
+    
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
-
+    
     if "search-results" in data and "entry" in data["search-results"] and data["search-results"]["entry"]:
-        paper = data["search-results"]["entry"][0]
-        return {
-            "title": paper.get("dc:title", "No title found"),
-            "abstract": paper.get("dc:description", "No abstract available"),
-            "doi": paper.get("prism:doi", "No DOI found"),
-            "link": paper.get("link", [{}])[0].get("@href", "No link available")
-        }
+        return data["search-results"]["entry"][0].get("dc:description")
     return None
 
 if __name__ == "__main__":
