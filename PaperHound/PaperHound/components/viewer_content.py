@@ -1,6 +1,12 @@
+import os
+import sys
 import reflex as rx
-from ..components.custom_table import DynamicTableState, generate_dynamic_table
-from ..backend.sidebar_state import SidebarState
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.components.custom_table import DynamicTableState, generate_dynamic_table
+from PaperHound.backend.sidebar_state import SidebarState
 
 def viewer_content():
     return rx.box(

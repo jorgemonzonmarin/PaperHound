@@ -1,13 +1,10 @@
-import asyncio
-import dataclasses
 import time
-import reflex as rx
+import asyncio
 import logging
-
+import dataclasses
+import reflex as rx
 from datetime import datetime
-
 from .scripts import procesar_papers as pp
-
 
 def quick_blocking_function():
     time.sleep(0.5)

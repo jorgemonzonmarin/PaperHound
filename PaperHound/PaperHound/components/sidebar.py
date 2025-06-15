@@ -1,9 +1,14 @@
 """Sidebar component for the app."""
-
+import os
+import sys
 import reflex as rx
 
-from .. import styles
-from ..backend.sidebar_state import SidebarState
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound import styles
+from PaperHound.backend.sidebar_state import SidebarState
+
 
 def sidebar_header() -> rx.Component:
     """Sidebar header.

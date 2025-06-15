@@ -1,8 +1,14 @@
+
+import re
+import os 
+import sys
 import reflex as rx
 import pandas as pd
-import re
-from typing import List, Union
-from ..backend.table_state import DynamicTableState
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.backend.table_state import DynamicTableState
 
 # Función para aplicar estilos condicionales a las celdas
 def styled_cell(value: str) -> rx.Component:
@@ -46,8 +52,6 @@ def _badge(status: str):
 
 def status_badge(status):
     """Aplica estilos dinámicos según el valor del status usando Reflex Match."""
-
-    
 
     return rx.match(
         status,

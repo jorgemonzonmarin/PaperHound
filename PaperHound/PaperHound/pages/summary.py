@@ -1,9 +1,16 @@
+
+import os
+import sys
 import reflex as rx
-from ..templates import template
-from ..backend.questions_state import QuestionState
-from ..backend.query_state import QueryState
-from ..backend.topic_state import TopicState
-from ..backend.processing_state import ProcessingState  # Importamos el estado de procesamiento
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.templates import template
+from PaperHound.backend.questions_state import QuestionState
+from PaperHound.backend.query_state import QueryState
+from PaperHound.backend.topic_state import TopicState
+from PaperHound.backend.processing_state import ProcessingState  # Importamos el estado de procesamiento
 
 @template(route="/summary", title="Summary of Review")
 def summary_page() -> rx.Component:

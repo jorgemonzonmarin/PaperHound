@@ -1,6 +1,11 @@
+import os
+import sys
 import reflex as rx
 
-from ..templates import template
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.templates import template
 
 @template(route="/", title="Inicio")
 def dashboard() -> rx.Component:

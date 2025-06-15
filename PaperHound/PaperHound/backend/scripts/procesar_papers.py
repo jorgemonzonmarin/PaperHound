@@ -1,16 +1,13 @@
-import pandas as pd
-import ollama
-#from transformers import pipeline
 import os
 import re
-from datetime import datetime
+import ollama
 import logging
+import pandas as pd
+from datetime import datetime
 
-# Configuración del logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
-
 
 PAPERS_A_ANALIZAR = r"C:\Users\JorgeMonzonMarin\GDI PROYECTOS Y MONTAJES, S.A\TESIS-Jorge - Documentos\Memoria\Papers\Sensor_espuma\lista_papers\2025-03-03_Papers_encontrados.csv"
 NUM_PREGUNTAS = 13

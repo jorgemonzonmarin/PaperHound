@@ -1,13 +1,15 @@
+import os 
+import sys
 import reflex as rx
-import pandas as pd
-from ..components.custom_table import DynamicTableState
-from ..templates import template
 
-from ..backend.table_state import DynamicTableState
-from ..components.custom_table import generate_dynamic_table
-from ..components.sidebar import SidebarState
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
 
-from ..components.select_file import select_example3
+from PaperHound.templates import template
+from PaperHound.components.sidebar import SidebarState
+from PaperHound.backend.table_state import DynamicTableState
+from PaperHound.components.select_file import select_example3
+from PaperHound.components.custom_table import DynamicTableState
 
 @template(route="/csv_view", title="CSV Viewer", on_load=DynamicTableState.load_entries)
 def csv_view() -> rx.Component:

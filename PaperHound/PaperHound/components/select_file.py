@@ -1,8 +1,12 @@
-import random
 import os
+import sys
 import reflex as rx
-from ..components.viewer_content import viewer_content
-from ..components.custom_table import DynamicTableState
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.components.viewer_content import viewer_content
+from PaperHound.components.custom_table import DynamicTableState
 
 class SelectState3(rx.State):
     current_dir = os.path.dirname(os.path.abspath(__file__))

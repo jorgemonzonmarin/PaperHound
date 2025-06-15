@@ -1,6 +1,12 @@
+import os
+import sys
 import reflex as rx
-from ..templates import template
-from ..backend.questions_state import QuestionState  # Importar la clase de estado
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.templates import template
+from PaperHound.backend.questions_state import QuestionState  # Importar la clase de estado
 
 @template(route="/questions", title="Questions")
 def settings() -> rx.Component:

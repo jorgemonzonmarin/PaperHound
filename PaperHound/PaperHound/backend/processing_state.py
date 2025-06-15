@@ -1,26 +1,19 @@
 import os 
 import sys
 import logging
-
+import asyncio
+import threading
 import reflex as rx
 from datetime import datetime
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, project_root)
 
-from ..backend.query_state import QueryState
-from ..backend.topic_state import TopicState
-from ..backend.questions_state import QuestionState
-from .scripts import procesar_papers as pp
-#from .scripts.procesar_papers import procesar_articulos, verificar_y_reprocesar, PAPERS_A_ANALIZAR, TOPIC, QUESTIONS
-from .scripts.search_and_save_papers import search_and_save_papers
-
-# from .rx_procesar_papers import RunInThreadState
-from .run_in_thread import run_in_thread
-import threading
-import asyncio
-
-   # Variable global para almacenar la ruta del archivo de artículos encontrados
+from PaperHound.backend.query_state import QueryState
+from PaperHound.backend.topic_state import TopicState
+from PaperHound.backend.questions_state import QuestionState
+from PaperHound.backend.scripts import procesar_papers as pp
+from PaperHound.backend.scripts.search_and_save_papers import search_and_save_papers
 
 class ProcessingState(rx.State):
     """Estado para gestionar la ejecución del procesamiento de artículos."""

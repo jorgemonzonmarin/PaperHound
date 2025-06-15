@@ -1,12 +1,13 @@
 """The settings page."""
-
+import os
+import sys
 import reflex as rx
 
-from ..templates import template
-from ..views.color_picker import primary_color_picker, secondary_color_picker
-from ..views.radius_picker import radius_picker
-from ..views.scaling_picker import scaling_picker
-from ..backend.query_state import QueryState  # Importar la clase de estado
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
+
+from PaperHound.templates import template
+from PaperHound.backend.query_state import QueryState  # Importar la clase de estado
 
 @template(route="/queries", title="Queries")
 def settings() -> rx.Component:

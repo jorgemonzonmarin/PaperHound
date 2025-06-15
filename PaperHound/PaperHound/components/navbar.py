@@ -1,13 +1,15 @@
 """Navbar component for the app."""
-
+import os 
+import sys
 import reflex as rx
 
-from .. import styles
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+sys.path.insert(0, project_root)
 
+from PaperHound import styles
 
 def menu_item_icon(icon: str) -> rx.Component:
     return rx.icon(icon, size=20)
-
 
 def menu_item(text: str, url: str) -> rx.Component:
     """Menu item.
@@ -71,7 +73,6 @@ def menu_item(text: str, url: str) -> rx.Component:
         width="100%",
     )
 
-
 def navbar_footer() -> rx.Component:
     """Navbar footer.
 
@@ -99,7 +100,6 @@ def navbar_footer() -> rx.Component:
         width="100%",
         padding="0.35em",
     )
-
 
 def menu_button() -> rx.Component:
     # Get all the decorated pages and add them to the menu.
@@ -165,7 +165,6 @@ def menu_button() -> rx.Component:
         ),
         direction="right",
     )
-
 
 def navbar() -> rx.Component:
     """The navbar.
