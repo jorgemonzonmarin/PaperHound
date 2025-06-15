@@ -94,12 +94,11 @@ QUERIES = [
     'AND ("sensor performance" OR "sensor optimization") AND ("ToF" OR "ultrasonic sensor" OR "LIDAR")'
 ]
 
-
 # Lista de funciones para obtener abstracts, en orden de preferencia
 ABSTRACT_FUNCTIONS = [
-    get_paper_info_arxiv,
-    get_paper_info_semantic,
     get_paper_info_scopus,
+    get_paper_info_semantic,
+    get_paper_info_arxiv,
     get_paper_info_openalex,
     get_paper_info_crossref,
 ]

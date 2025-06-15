@@ -1,4 +1,11 @@
+import logging
 import requests
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 def get_paper_info_semantic(title):
     url = "https://api.semanticscholar.org/graph/v1/paper/search"
@@ -9,7 +16,7 @@ def get_paper_info_semantic(title):
     }
     response = requests.get(url, params=params)
     data = response.json()
-    print(data)
+    logging.debug(data)
 
     if "data" in data and data["data"]:
         paper = data["data"][0]
