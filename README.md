@@ -95,4 +95,4 @@ docker run -p 3000:3000 -p 11434:11434 -v <ruta_local>:/app/assets paperhound
 ---
 
 # 📧 Contacto
-Jorge Monzón Marín – jorge.monzon@electroingenium.es
+Jorge Monzón Marín – jorgemonzonmarin@gmail.com
