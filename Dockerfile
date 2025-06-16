@@ -1,23 +1,37 @@
-# Usa una imagen base de Python ligera
-FROM python:3.12-slim
+FROM python:3.12
 
-# Instala unzip y otras dependencias necesarias
-RUN apt-get update && apt-get install -y unzip curl && rm -rf /var/lib/apt/lists/*
+# Instalación de dependencias
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl git unzip libstdc++6 ca-certificates procps && \
+    update-ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-# Establece el directorio de trabajo dentro del contenedor
+# Instalar Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Agrega Ollama al PATH
+ENV PATH="/root/.ollama/bin:${PATH}"
+
+# Crear directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos de requerimientos antes para aprovechar la caché
+# Instalar dependencias de Python
 COPY requirements.txt .
+RUN pip install --no-cache-dir ollama && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Instala las dependencias
-RUN pip install --no-cache-dir -r requirements.txt
+# Copiar aplicación
+COPY ./PaperHound .
 
-# Copia el resto del código fuente
-COPY . .
+# ❗ Copiar el modelo previamente descargado
+COPY ./models /root/.ollama/models
 
-# Expone el puerto en el que correrá Reflex (por defecto 3000)
+# ❌ Ya no se hace pull, porque ya copiaste el modelo
+# (El servidor se iniciará al lanzar el contenedor con el modelo ya disponible)
+
+# Exponer puertos
 EXPOSE 3000
+EXPOSE 11434
 
-# Comando para iniciar la aplicación en modo producción
-CMD ["reflex", "run"]
+# Script de arranque
+CMD ["bash", "/app/start.sh"]
