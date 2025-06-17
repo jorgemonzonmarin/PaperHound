@@ -20,7 +20,7 @@ assets/external/
 __pycache__/
 venv/
 
-
+keys.env
 # C extensions
 *.so
 

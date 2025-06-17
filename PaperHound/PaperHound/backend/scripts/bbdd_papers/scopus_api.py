@@ -9,7 +9,7 @@ sys.path.insert(0, project_root)
 
 from PaperHound.backend.scripts.bbdd_papers.filter import filter_valid_results
 
-SCOPUS_API_KEY = "28ed61df3b550a39c575b5270b49f254"
+SCOPUS_API_KEY = os.getenv("SCOPUS_API_KEY")
 SCOPUS_SEARCH_URL = "https://api.elsevier.com/content/search/scopus"
 HEADERS = {"X-ELS-APIKey": SCOPUS_API_KEY, "Accept": "application/json"}
 
