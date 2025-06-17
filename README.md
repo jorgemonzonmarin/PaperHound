@@ -1,13 +1,11 @@
 # 📚 PaperHound – Sistema Inteligente para Revisión Sistemática de Literatura Científica
 
-<div style="display: flex; align-items: center; gap: 20px;">
-  <img src="PaperHound/assets/Logo.png" alt="PaperHound Logo" width="140"/>
+<div style="display: flex; align-items: left; gap: 20px;">
+  <img src="PaperHound/assets/Logo.png" alt="PaperHound Logo" width="140" />
   <p>
     <strong>PaperHound</strong> es una herramienta web desarrollada en Python con Reflex que automatiza, organiza y acelera el proceso de revisión sistemática de literatura científica. Está diseñada para investigadores, doctorandos, ingenieros y equipos de I+D que buscan eficiencia, trazabilidad y rigor metodológico en sus revisiones bibliográficas.
   </p>
 </div>
-
-
 
 ---
 
