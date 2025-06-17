@@ -95,7 +95,7 @@ El `Dockerfile`:
 
 ```bash
 docker build -t paperhound .
-docker run -e SCOPUS_API_KEY=valor -v <ruta_local>:/app/assets -p 3000:3000 -p 11434:11434 paperhound
+docker run -e SCOPUS_API_KEY=valor -v <ruta_local>:/app/assets -p 3000:3000 -p 8000:8000 paperhound
 ```
 ---
 
